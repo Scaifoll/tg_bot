@@ -70,13 +70,12 @@ async def validate_user(chat_id, user: types.User):
     display_name = f"{user.first_name or ''} {user.last_name or ''}".strip().lower()
     username = (user.username or "").lower()
 
-    if any(banned in display_name for banned in BANNED_NICKS) or any(banned in username for banned in BANNED_NICKS):
+    if any(banned in display_name for banned in BANNED_NICKS):
         try:
             await bot.ban_chat_member(chat_id, user.id)
-            await bot.unban_chat_member(chat_id, user.id)
-            logging.info(f"Кик пользователя {user.id} @{username} ({display_name}) из чата {chat_id}")
+            logging.info(f"Бан пользователя {user.id} @{username} ({display_name}) из чата {chat_id}")
         except Exception as e:
-            logging.error(f"Ошибка при кике пользователя {user.id} @{username}: {e}")
+            logging.error(f"Ошибка при бане пользователя {user.id} @{username}: {e}")
 
 @dp.message(Command("add"))
 async def cmd_add(message: types.Message):
